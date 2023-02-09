@@ -22,6 +22,7 @@ import java.util.concurrent.TimeoutException;
  * @Description:
  */
 public class TtlTest extends BaseTest {
+
     public static void main(String[] args) throws IOException, TimeoutException, InterruptedException {
         ConnectionFactory factory = factory();
         @Cleanup Connection conn = factory.newConnection();

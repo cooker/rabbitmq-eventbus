@@ -9,8 +9,10 @@ import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.MessageConversionException;
 import org.springframework.amqp.support.converter.SimpleMessageConverter;
+import org.springframework.aop.MethodBeforeAdvice;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -62,7 +64,12 @@ public class ReconTest extends BaseTest {
                 return new String(message.getBody());
             }
         });
-        container.setAdviceChain();
+        container.setAdviceChain(new MethodBeforeAdvice() {
+            @Override
+            public void before(Method method, Object[] objects, Object o) throws Throwable {
+                System.out.println("执行方法: " + method.getName());
+            }
+        });
         container.setMessageListener(listener);
         container.setQueueNames("queue.1","queue.2");
         container.setBatchSize(10);

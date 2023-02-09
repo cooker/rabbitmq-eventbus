@@ -1,0 +1,38 @@
+spring:
+  cloud:
+    stream:
+      binders:
+        rabbit:
+          environment:
+            spring:
+              rabbitmq:
+                host: 127.0.0.1
+                port: 5672
+                username: guest
+                password: guest
+      bindings:
+        test_out:
+          destination: testOutTopicc4
+          group: testOutGroupc4
+          content-type: application/json
+          producer:
+            required-groups:
+              - testOutGroupc4
+        test_dlq_in:
+          destination: testOutTopicc4.testOutGroupc4.dlq
+          group: #
+        qx_close_out:
+          destination: qx.close
+          content-type: application/json
+          producer:
+            required-groups:
+              - '#'
+      default-binder: rabbit
+      rabbit:
+        bindings:
+          test_out:
+            producer:
+              ttl: 50000
+              dlq-letter-exchange: qx.close
+              dlq-letter-routing-key: #
+              auto-bind-dlq: true
