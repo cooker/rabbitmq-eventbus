@@ -23,6 +23,11 @@ public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
+
+    /**
+     * rabbitTemplate 才能使用
+     * @return
+     */
     @Bean
     public Queue timeOutQueue() {
         Map<String, Object> args = new HashMap<>();

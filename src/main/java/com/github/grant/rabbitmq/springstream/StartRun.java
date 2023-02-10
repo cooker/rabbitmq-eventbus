@@ -27,16 +27,18 @@ public class StartRun implements ApplicationListener<ApplicationStartedEvent> {
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
-        log.info("消息发送");
-        new Thread(()->{
-            try {
-                TimeUnit.SECONDS.sleep(10);
-                System.out.println("hdjkashdiuqwhuioheuioqwhioue");
-                mqSer.send();
-            } catch (Exception e) {
-                log.error("yic", e);
-            }
-        }).start();
+        if (event.getApplicationContext().getParent() == null) {
+            log.info("消息发送");
+            new Thread(()->{
+                try {
+                    TimeUnit.SECONDS.sleep(10);
+                    System.out.println("hdjkashdiuqwhuioheuioqwhioue");
+                    mqSer.send();
+                } catch (Exception e) {
+                    log.error("yic", e);
+                }
+            }).start();
+        }
         //        rabbitTemplate.convertAndSend("timeOut", "#", "sa");
     }
 }

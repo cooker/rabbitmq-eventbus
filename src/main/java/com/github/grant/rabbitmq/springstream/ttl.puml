@@ -1,0 +1,8 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+下单 -> MQ: 发起超时关闭
+MQ --> DLQ: TTL 过期转发至死性队列
+DLQ --> Close: 消费并转发至关闭订单
+@enduml
