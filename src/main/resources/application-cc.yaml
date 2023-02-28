@@ -1,0 +1,34 @@
+delay:
+  order_unPay:
+    topic: order_unPay_topic
+    group: 55minutes_group
+spring:
+  cloud:
+    stream:
+      bindings:
+        order_unPay:
+          destination: ${delay.order_unPay.topic}
+          group: ${delay.order_unPay.group}
+          content-type: application/json
+          producer:
+            required-groups:
+              - ${delay.order_unPay.group}
+        order_timeout_unpay_delay_dlq_in:
+          destination: ${delay.order_unPay.topic}.${delay.order_unPay.group}
+          group: dlq
+        order_unpay_out:
+          destination: order_unPay_push_topic
+          content-type: application/json
+          producer:
+            required-groups:
+              - 'order_unPay_push_consumer_group'
+      rabbit:
+        bindings:
+          order_unPay:
+            producer:
+              ttl: 3300000
+              auto-bind-dlq: true
+          order_timeout_unpay_delay_dlq_in:
+            consumer:
+              prefetch: 1
+              bind-queue: false
